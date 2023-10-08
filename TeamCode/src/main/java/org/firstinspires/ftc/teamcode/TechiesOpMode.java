@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
 
 
@@ -47,6 +48,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
     // Declare OpMode members.
     TechiesRobotHardware robot   = new TechiesRobotHardware();
+    TechiesHardwareWithoutDriveTrain robotCore;
     private ElapsedTime runtime = new ElapsedTime();
     public static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     public static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
@@ -106,7 +108,11 @@ public abstract class TechiesOpMode extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
+            if (gamepad1.y) {
+                robotCore.leftShooter.setPower(0);
+                robotCore.rightShooter.setPosition(1);
 
+            }
 
         }
     }
