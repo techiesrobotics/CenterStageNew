@@ -27,13 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.DriverControlOpMode;
+package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -64,9 +62,11 @@ public abstract class TechiesOpMode extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap);
+        robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
+
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -109,14 +109,20 @@ public abstract class TechiesOpMode extends LinearOpMode {
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
             if (gamepad1.y) {
-                robotCore.leftShooter.setPower(0);
-                robotCore.rightShooter.setPosition(1);
+                robotCore.droneLauncher.setPosition(0);
 
             }
-
+            if (gamepad1.right_bumper){
+                robotCore.arm.setPower(1);
+            } else if (gamepad1.left_bumper){
+                robotCore.arm.setPower(-1);
+            } else {
+                robotCore.arm.setPower(0);
+            }
         }
     }
 
 
 }
+
 

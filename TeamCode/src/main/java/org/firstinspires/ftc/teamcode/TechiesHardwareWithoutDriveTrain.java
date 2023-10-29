@@ -29,9 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.annotations.ServoType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -53,13 +53,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TechiesHardwareWithoutDriveTrain
 {
     /* Public OpMode members. hi*/
-    //public DcMotor  leftDrive   = null;
-    //public DcMotor  rightDrive  = null;
-    //public DcMotor  leftBack    = null;
-    //public DcMotor  rightBack   = null;
-    public Servo leftShooter = null;
+    public Servo droneLauncher = null;
+    public DcMotor arm;
     /* Retractable Claws defined below */
-    public Servo rightShooter = null;
 
 
 
@@ -75,10 +71,10 @@ public class TechiesHardwareWithoutDriveTrain
 
         // Save reference to Hardware map
         hwMap = aHWMap;
-        leftShooter = hwMap.get(Servo.class, "leftshooter");
-        leftShooter.setPosition(1);  // TODO KL: is this correct?
-        rightShooter = hwMap.get(Servo.class, "rightshooter");
-        rightShooter.setPosition(1);
+        droneLauncher = hwMap.get(Servo.class, "dronelauncher");
+        droneLauncher.setPosition(1);
+        arm = hwMap.get(DcMotor.class, "arm");
+        //We need to add ummm.... uhhhhh the arm and expansion hub!!!!1!
     }
 
     public void init(HardwareMap hardwareMap) {
