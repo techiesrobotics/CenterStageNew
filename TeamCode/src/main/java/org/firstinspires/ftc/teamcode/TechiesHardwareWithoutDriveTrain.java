@@ -55,6 +55,9 @@ public class TechiesHardwareWithoutDriveTrain
     /* Public OpMode members. hi*/
     public Servo droneLauncher = null;
     public DcMotor arm;
+    public Servo claw = null;
+    public  Servo wrist;
+
     /* Retractable Claws defined below */
 
 
@@ -71,10 +74,24 @@ public class TechiesHardwareWithoutDriveTrain
 
         // Save reference to Hardware map
         hwMap = aHWMap;
-        droneLauncher = hwMap.get(Servo.class, "dronelauncher");
-        droneLauncher.setPosition(1);
+        claw = hwMap.get(Servo.class, "claw");
+        claw.setPosition(0.7);
+        // droneLauncher = hwMap.get(Servo.class, "dronelauncher");
+      //  droneLauncher.setPosition(1);
+
+
+        //claw.setPosition(0.1);
         arm = hwMap.get(DcMotor.class, "arm");
-        //We need to add ummm.... uhhhhh the arm and expansion hub!!!!1!
+        //arm.setTargetPosition(0);
+        //arm.setPower(0.1);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        wrist = hwMap.get(Servo.class, "wrist");
+        wrist.setDirection(Servo.Direction.REVERSE);
+        wrist.setPosition(0.75);
+
+
     }
 
     public void init(HardwareMap hardwareMap) {

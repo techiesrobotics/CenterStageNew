@@ -57,10 +57,11 @@ public abstract class TechiesOpMode extends LinearOpMode {
     abstract public double getTurn() ;
     abstract public double getDrivefb();
     abstract public double getDrivelr();
+    boolean isUp;
 
     @Override
     public void runOpMode() {
-
+        isUp = false;
         robot.init(hardwareMap);
         robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
         telemetry.addData("Status", "Initialized");
@@ -86,8 +87,52 @@ public abstract class TechiesOpMode extends LinearOpMode {
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
+            // - This uses basic math to combine motions and is easier to drive straight.\
 
+            //moved on top
+            //This code below has been disabled for the autonomous since the claw is bugging out
+            //arm and wrist needs tp be ,pved
+            if (gamepad1.a) {
+                if (robotCore.claw.getPosition() > 0.5) {
+                    telemetry.addData("claw position", "1");
+                    robotCore.claw.setPosition(0);
+                    telemetry.addData("claw position changed to 0", "0");
+
+                    telemetry.update();
+                    sleep(200);
+                }
+                else if (robotCore.claw.getPosition() <= 0.5) {
+                    telemetry.addData("claw position", "0");
+                    robotCore.claw.setPosition(0.7);
+                    telemetry.addData("claw position changed to 1", "1");
+                    telemetry.update();
+                    sleep(200);
+                }
+           }
+         /*   if (gamepad1.right_bumper){
+                robotCore.arm.setPower(0.2);
+            } else if (gamepad1.left_bumper){
+                robotCore.arm.setPower(-0.2);
+            } else {
+                robotCore.arm.setPower(0);
+            }*/
+            if (gamepad1.right_bumper){
+                robotCore.arm.setTargetPosition(-1000);
+            }
+            if (gamepad1.left_bumper){
+                robotCore.arm.setTargetPosition(0);
+            }
+            if (gamepad1.y) {
+                if (robotCore.wrist.getPosition() > 0.3) {
+
+                    robotCore.wrist.setPosition(0.25);
+                    sleep(200);
+                }
+                else if (robotCore.wrist.getPosition() <= 0.3) {
+                    robotCore.wrist.setPosition(0.75);
+                    sleep(200);
+                }
+            }
             double turn = getTurn();
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
@@ -107,18 +152,16 @@ public abstract class TechiesOpMode extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("stickX", drivefb + turn + drivelr);
+            telemetry.addData("Motor pos: ", robotCore.claw.getPosition());
+            telemetry.addData("Position of wrist servo: ",robotCore.wrist.getPosition());
+            telemetry.addData("Position of claw servo: ",robotCore.claw.getPosition());
             telemetry.update();
-            if (gamepad1.y) {
-                robotCore.droneLauncher.setPosition(0);
+            // if (gamepad1.y) {
+               // robotCore.droneLauncher.setPosition(0);
 
-            }
-            if (gamepad1.right_bumper){
-                robotCore.arm.setPower(1);
-            } else if (gamepad1.left_bumper){
-                robotCore.arm.setPower(-1);
-            } else {
-                robotCore.arm.setPower(0);
-            }
+           // }
+
         }
     }
 

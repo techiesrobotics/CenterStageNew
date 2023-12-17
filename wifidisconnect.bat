@@ -1,0 +1,1 @@
+%LocalAppData%\Android\sdk\platform-tools\adb.exe disconnect
