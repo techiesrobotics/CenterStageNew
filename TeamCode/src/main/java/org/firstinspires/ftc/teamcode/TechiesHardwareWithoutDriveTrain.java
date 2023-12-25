@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,7 +58,8 @@ public class TechiesHardwareWithoutDriveTrain
     public DcMotor arm;
     public Servo claw = null;
     public  Servo wrist;
-
+    public DistanceSensor leftsensorRange;
+    public DistanceSensor rightsensorRange;
     /* Retractable Claws defined below */
 
 
@@ -74,25 +76,31 @@ public class TechiesHardwareWithoutDriveTrain
 
         // Save reference to Hardware map
         hwMap = aHWMap;
+        leftsensorRange = hwMap.get(DistanceSensor.class, "leftDistance");
+        rightsensorRange = hwMap.get(DistanceSensor.class, "rightDistance");
         claw = hwMap.get(Servo.class, "claw");
-        claw.setPosition(0.7);
+        claw.setPosition(0.9);
         // droneLauncher = hwMap.get(Servo.class, "dronelauncher");
       //  droneLauncher.setPosition(1);
 
 
         //claw.setPosition(0.1);
         arm = hwMap.get(DcMotor.class, "arm");
-        //arm.setTargetPosition(0);
-        //arm.setPower(0.1);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(0);
+        arm.setPower(0);
+
 
 
         wrist = hwMap.get(Servo.class, "wrist");
         wrist.setDirection(Servo.Direction.REVERSE);
-        wrist.setPosition(0.75);
+        wrist.setPosition(0);
 
 
     }
+
 
     public void init(HardwareMap hardwareMap) {
 

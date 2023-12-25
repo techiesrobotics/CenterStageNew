@@ -32,12 +32,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
-import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
-
 
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
@@ -58,6 +55,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
     abstract public double getDrivefb();
     abstract public double getDrivelr();
     boolean isUp;
+    int startingPosition;
 
     @Override
     public void runOpMode() {
@@ -67,7 +65,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         robot.init(hardwareMap);
-
+        startingPosition = robotCore.arm.getCurrentPosition();
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -103,7 +101,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 }
                 else if (robotCore.claw.getPosition() <= 0.5) {
                     telemetry.addData("claw position", "0");
-                    robotCore.claw.setPosition(0.7);
+                    robotCore.claw.setPosition(0.9);
                     telemetry.addData("claw position changed to 1", "1");
                     telemetry.update();
                     sleep(200);
@@ -116,22 +114,33 @@ public abstract class TechiesOpMode extends LinearOpMode {
             } else {
                 robotCore.arm.setPower(0);
             }*/
-            if (gamepad1.right_bumper){
-                robotCore.arm.setTargetPosition(-1000);
-            }
-            if (gamepad1.left_bumper){
-                robotCore.arm.setTargetPosition(0);
-            }
-            if (gamepad1.y) {
-                if (robotCore.wrist.getPosition() > 0.3) {
+           if (gamepad1.right_bumper){
+               if (robotCore.arm.getTargetPosition() <= 0) {
+                   encoderArm(0.15, 4.7);
+                   robotCore.wrist.setPosition(1);
+                   sleep(200);
+               } else if (robotCore.arm.getTargetPosition() >0){
+                   encoderArm(0.15, -4.7);
+                   robotCore.wrist.setPosition(0.1);
+                   sleep(200);
+           }}
 
-                    robotCore.wrist.setPosition(0.25);
+            if (gamepad1.y) {
+                if (robotCore.wrist.getPosition() > 0.6) {
+                   // encoderDrive(0.35, .4);
+                    robotCore.wrist.setPosition(0.1);
                     sleep(200);
                 }
-                else if (robotCore.wrist.getPosition() <= 0.3) {
-                    robotCore.wrist.setPosition(0.75);
+                else if (robotCore.wrist.getPosition() <= 0.6) {
+                    //encoderDrive(0.35, -.35);
+                    robotCore.wrist.setPosition(1);
                     sleep(200);
                 }
+            }
+            if (gamepad1.x) {
+                robotCore.wrist.setPosition(0.1);
+                encoderArm(0.15, -3.3);
+
             }
             double turn = getTurn();
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
@@ -166,6 +175,40 @@ public abstract class TechiesOpMode extends LinearOpMode {
     }
 
 
-}
 
+    public void encoderArm(double speed,
+                           double armInches) {
+        int newArmTarget;
+
+
+        // Ensure that the OpMode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = robotCore.arm.getCurrentPosition() + (int)(armInches * COUNTS_PER_INCH);
+
+            robotCore.arm.setTargetPosition(newArmTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            robotCore.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robotCore.arm.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+
+
+
+            sleep(250);   // optional pause after each move.
+        }
+    }
+}
 

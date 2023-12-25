@@ -56,44 +56,8 @@ public class AutoRedBackdrop extends AutoBackdrop {
     double repetitions = 0;
 
 
-    @Override
-    public void runOpMode() {
-        robot = new TechiesHardwareWithoutDriveTrain(hardwareMap);
-        odoDriveTrain = new SampleMecanumDrive(hardwareMap);
-        // set up camera
 
 
-        // Wait for the game to begin
-
-
-        telemetry.addData(">", "Press Play to start op mode");
-
-        telemetry.update();
-
-
-        waitForStart();
-        telemetry.update();
-        telemetry.addData("do something", "do things");
-
-
-        telemetry.addData("do missions", "finish mission");
-        telemetry.update();
-    }
-
-    @Override
-    public double adjustTurn(double angle) {
-        return 0;
-    }
-
-    @Override
-    public double adjustTrajectorydistance(double distance) {
-        return 0;
-    }
-
-    @Override
-    protected void park() {
-
-    }
 
     ;
     }

@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -45,7 +46,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 
 //@Disabled
-//@Autonomous(name = "AutoParent", group = "ConceptBlue")
+@Autonomous(name = "AutoParent", group = "ConceptBlue")
 public abstract class AutoParent extends LinearOpMode  {
 
     static final int TARGET_LEVEL_DEFAULT = 1;
@@ -53,9 +54,8 @@ public abstract class AutoParent extends LinearOpMode  {
     static final int TARGET_LEVEL_MIDDLE = 2;
     static final int TARGET_LEVEL_RIGHT = 3;
 
-
+    TechiesHardwareWithoutDriveTrain robotCore ;
     SampleMecanumDrive odoDriveTrain;
-    TechiesHardwareWithoutDriveTrain robot ;
 
     static final double FEET_PER_METER = 3.28084;
 
@@ -78,16 +78,48 @@ public abstract class AutoParent extends LinearOpMode  {
     static final int MIDDLE = 6;
     static final int RIGHT = 9;
 
+    public static final int LEFT_POSITION = 1;
+
+    public static final int MIDDLE_POSITION = 2;
+
+    public static final int RIGHT_POSITION = 3;
+
     double batteryVoltageMultiplier = 1;
     public abstract double adjustTurn(double angle);
     public abstract double adjustTrajectorydistance(double distance);
 
     protected abstract void park();
 
+    protected int position = 2;
 
-    protected int determineTargetZone( ArrayList<AprilTagDetection> currentDetections, Telemetry telemetry){
-       // distance sesnor/camera stuff goes here
-        return 0;
+    @Override
+    public void runOpMode() {
+        robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
+        while (!isStarted() && !isStopRequested()) {
+            position = determineTargetZone(telemetry);
+            // telemetry.addData(">", "Press Play to start op mode");
+            //  telemetry.addData("Voltage Multiplier", batteryVoltageMultiplier);
+            // telemetry.update();
+
+        }
+
+        waitForStart();
+    }
+    protected int determineTargetZone(Telemetry telemetry){
+        if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 12 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 18){
+            position = LEFT_POSITION;
+        } else if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 10 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 14){
+            position = RIGHT_POSITION;
+        } else {
+            position = MIDDLE_POSITION;
+        }
+        telemetry.addData("position", position);
+        telemetry.addData("deviceName", robotCore.leftsensorRange.getDeviceName() );
+        telemetry.addData("range", String.format("%.01f in", robotCore.leftsensorRange.getDistance(DistanceUnit.INCH)));
+        telemetry.addData("deviceName", robotCore.rightsensorRange.getDeviceName() );
+        telemetry.addData("range", String.format("%.01f in", robotCore.rightsensorRange.getDistance(DistanceUnit.INCH)));
+        telemetry.update();
+        return position;
     }
 
 
