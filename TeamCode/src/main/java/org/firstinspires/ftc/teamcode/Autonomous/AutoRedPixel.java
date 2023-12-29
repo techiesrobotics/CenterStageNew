@@ -27,10 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**
@@ -43,9 +44,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Red Backdrop", group = "Concept")
+@Autonomous(name = "Red Pixel", group = "Concept")
 //@Disabled
-public class AutoRedBackdrop extends AutoBackdrop {
+public class AutoRedPixel extends AutoBackdrop {
 
 
     SampleMecanumDrive odoDriveTrain;

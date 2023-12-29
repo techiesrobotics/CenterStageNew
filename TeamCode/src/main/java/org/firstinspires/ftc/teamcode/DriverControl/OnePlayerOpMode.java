@@ -1,10 +1,12 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.DriverControl;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.DriverControl.TechiesOpMode;
+
 @TeleOp(name="1 Player: DriverControlOpMode", group="Linear Opmode")
-public class OnePlayerOpMode extends org.firstinspires.ftc.teamcode.TechiesOpMode {
+public class OnePlayerOpMode extends TechiesOpMode {
     public double getTurn() {
         double turn = gamepad1.right_stick_x;
         return turn;
