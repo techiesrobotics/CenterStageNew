@@ -116,11 +116,11 @@ public abstract class TechiesOpMode extends LinearOpMode {
             }*/
            if (gamepad1.right_bumper){
                if (robotCore.arm.getTargetPosition() <= 0) {
-                   encoderArm(0.15, 4.7);
-                   robotCore.wrist.setPosition(1);
+                   encoderArm(0.15, 4.65);
+                   robotCore.wrist.setPosition(.1);
                    sleep(200);
                } else if (robotCore.arm.getTargetPosition() >0){
-                   encoderArm(0.15, -4.7);
+                   encoderArm(0.25, -4.65);
                    robotCore.wrist.setPosition(0.1);
                    sleep(200);
            }}
@@ -142,7 +142,28 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 encoderArm(0.15, -3.3);
 
             }
-            double turn = getTurn();
+            if (gamepad1.right_trigger>0 &&gamepad1.left_trigger>0){
+                robotCore.droneLauncher.setPosition(.05);
+
+            }
+            if (gamepad1.dpad_up){
+                robotCore.arm.setPower(-.5);
+
+
+            }else {
+                robotCore.arm.setPower(0);
+
+            }
+            if (gamepad1.dpad_down){
+                robotCore.arm.setPower(.5);
+
+
+            }else {
+                robotCore.arm.setPower(0);
+
+            }
+
+                double turn = getTurn();
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
 

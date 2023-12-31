@@ -78,10 +78,12 @@ public class TechiesHardwareWithoutDriveTrain
         hwMap = aHWMap;
         leftsensorRange = hwMap.get(DistanceSensor.class, "leftDistance");
         rightsensorRange = hwMap.get(DistanceSensor.class, "rightDistance");
+
         claw = hwMap.get(Servo.class, "claw");
         claw.setPosition(0.9);
-        // droneLauncher = hwMap.get(Servo.class, "dronelauncher");
-      //  droneLauncher.setPosition(1);
+
+        droneLauncher = hwMap.get(Servo.class, "dronelauncher");
+        droneLauncher.setPosition(.7);
 
 
         //claw.setPosition(0.1);
