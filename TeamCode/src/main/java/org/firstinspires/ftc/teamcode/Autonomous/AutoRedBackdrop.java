@@ -27,10 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**
@@ -43,9 +44,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Red Pixel", group = "Concept")
+@Autonomous(name = "Red Backdrop", group = "Concept")
 //@Disabled
-public class AutoRedPixel extends AutoBackdrop {
+public class AutoRedBackdrop extends AutoBackdrop {
 
 
     SampleMecanumDrive odoDriveTrain;
@@ -56,29 +57,6 @@ public class AutoRedPixel extends AutoBackdrop {
     double repetitions = 0;
 
 
-    @Override
-    public void runOpMode() {
-        robot = new TechiesHardwareWithoutDriveTrain(hardwareMap);
-        odoDriveTrain = new SampleMecanumDrive(hardwareMap);
-        // set up camera
-
-
-        // Wait for the game to begin
-
-
-        telemetry.addData(">", "Press Play to start op mode");
-
-        telemetry.update();
-
-
-        waitForStart();
-        telemetry.update();
-        telemetry.addData("do something", "do things");
-
-
-        telemetry.addData("do missions", "finish mission");
-        telemetry.update();
-    }
 
 
 
