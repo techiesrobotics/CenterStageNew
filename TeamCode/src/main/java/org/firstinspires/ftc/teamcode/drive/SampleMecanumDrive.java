@@ -95,20 +95,18 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hwMap.get(IMU.class, "imu");
+       /* imu = hwMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+        imu.initialize(parameters);*/
 
 
         leftDrive  = hwMap.get(DcMotorEx.class, "frontleft");
         rightDrive = hwMap.get(DcMotorEx.class, "frontright");
         leftBack  = hwMap.get(DcMotorEx.class, "backleft");
         rightBack    = hwMap.get(DcMotorEx.class, "backright");
-       /* leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.FORWARD);*/
+
+
         motors = Arrays.asList(leftDrive, leftBack, rightDrive, rightBack);
 
         for (DcMotorEx motor : motors) {
@@ -128,8 +126,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.FORWARD);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors*/
+        leftBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
 
 // different than last year
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
