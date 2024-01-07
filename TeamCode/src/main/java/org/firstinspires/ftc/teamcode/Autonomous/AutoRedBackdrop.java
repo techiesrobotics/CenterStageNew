@@ -49,15 +49,22 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class AutoRedBackdrop extends AutoBackdrop {
 
 
-    SampleMecanumDrive odoDriveTrain;
-    TechiesHardwareWithoutDriveTrain robot ;
-    double currentVelocity;
-    double maxVelocity = 0.0;
-    double currentPos;
-    double repetitions = 0;
+    public double adjustTurn(double angle) {
+        return -angle;
+    }
+    public double adjustTrajectorydistance(double distance) {
+        return -distance;
+    }
+
+    public int adjustZone(int zone) {
+        return 4-zone;
+    }
 
 
+    @Override
+    protected void goToBackdrop(int targetZone) {
 
+    }
 
 
     ;

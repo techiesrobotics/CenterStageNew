@@ -31,13 +31,17 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
+import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -65,19 +69,8 @@ public abstract class AutoParent extends LinearOpMode  {
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
     // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
-    static final double OPEN_CLAW = 0;
-    static final double CLOSED_CLAW = 1;
-    // UNITS ARE METERS
-    double tagsize = 0.166;
 
-    //Tag Id for sleeve
-    static final int LEFT = 5; // Tag ID 18 from the 36h11 family
-    static final int MIDDLE = 6;
-    static final int RIGHT = 9;
+
 
     public static final int LEFT_POSITION = 1;
 
@@ -87,24 +80,24 @@ public abstract class AutoParent extends LinearOpMode  {
 
     double batteryVoltageMultiplier = 1;
     public abstract double adjustTurn(double angle);
+    public abstract int adjustZone(int zone);
     public abstract double adjustTrajectorydistance(double distance);
 
-    protected abstract void park();
 
-    protected int position = 2;
+    protected int position = TARGET_LEVEL_DEFAULT;
 
     @Override
     public void runOpMode() {
         robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
+        odoDriveTrain = new SampleMecanumDrive(hardwareMap);
         while (!isStarted() && !isStopRequested()) {
             position = determineTargetZone(telemetry);
-            // telemetry.addData(">", "Press Play to start op mode");
-            //  telemetry.addData("Voltage Multiplier", batteryVoltageMultiplier);
-            // telemetry.update();
+
 
         }
 
         waitForStart();
+        doMissions();
     }
     protected int determineTargetZone(Telemetry telemetry){
         if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 12 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 18){
@@ -120,8 +113,66 @@ public abstract class AutoParent extends LinearOpMode  {
         telemetry.addData("deviceName", robotCore.rightsensorRange.getDeviceName() );
         telemetry.addData("range", String.format("%.01f in", robotCore.rightsensorRange.getDistance(DistanceUnit.INCH)));
         telemetry.update();
-        return position;
+        return 1;
     }
+
+    protected void doMissions() {
+        goToTapeFromStart(adjustZone(position));
+        dropPixel();
+        goToBackdrop(position);
+        //dropBackdrop(position);
+        //park();
+
+    }
+    protected void goToTapeFromStart(int targetZone) {
+
+
+        forward(26);
+        if (targetZone == LEFT_POSITION) {
+            odoDriveTrain.turn(Math.toRadians(-98));
+            sleep(800);
+            back(22);
+            /*Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
+            odoDriveTrain.setPoseEstimate(startPose);
+            Trajectory leftTape = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
+                    .lineToLinearHeading(new Pose2d(25,0,Math.toRadians(45)))
+                    .build();
+            odoDriveTrain.followTrajectory(leftTape);
+            Pose2d startPose2 = leftTape.end();
+            odoDriveTrain.setPoseEstimate(startPose2);*/
+        } else if (targetZone == RIGHT_POSITION) {
+            odoDriveTrain.turn((Math.toRadians(-98)));
+        } else if (targetZone == MIDDLE_POSITION) {
+
+        }
+    }
+
+
+
+    protected void dropPixel(){
+
+        robotCore.wrist.setPosition(1);
+        sleep(500);
+        robotCore.claw.setPosition(1);
+        sleep(500);
+        robotCore.wrist.setPosition(0);
+        sleep(1500);
+        robotCore.claw.setPosition(0);
+        sleep(100);
+
+         // come back to wrist and claw
+    }
+    abstract protected void goToBackdrop(int targetZone);
+    protected void dropBackdrop(int targetZone){
+        if (targetZone == LEFT_POSITION) {
+
+        } else if (targetZone == RIGHT_POSITION) {
+
+        } else if (targetZone == MIDDLE_POSITION) {
+        }
+    }
+    protected abstract void park();
+
 
 
 
@@ -156,6 +207,9 @@ public abstract class AutoParent extends LinearOpMode  {
         odoDriveTrain.followTrajectory(linetospline);
     }
     protected void straferight (double inches) {
+        odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+        odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
         odoDriveTrain.setPoseEstimate(startPose);
         Trajectory straferight = odoDriveTrain.trajectoryBuilder(new Pose2d(0, 0, 0))
@@ -164,8 +218,14 @@ public abstract class AutoParent extends LinearOpMode  {
         odoDriveTrain.followTrajectory(straferight);
         Pose2d startPose2 = straferight.end();
         odoDriveTrain.setPoseEstimate(startPose2);
+        odoDriveTrain.rightBack.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+        odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+
     }
     protected void strafeleft (double inches){
+        //odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+      //  odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+        //sleep(1000);
         Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
         odoDriveTrain.setPoseEstimate(startPose);
         Trajectory strafeleft = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
@@ -174,5 +234,10 @@ public abstract class AutoParent extends LinearOpMode  {
         odoDriveTrain.followTrajectory(strafeleft);
         Pose2d startPose2 = strafeleft.end();
         odoDriveTrain.setPoseEstimate(startPose2);
+        //sleep(1000);
+        //odoDriveTrain.rightBack.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+      //  odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+
     }
+
 }

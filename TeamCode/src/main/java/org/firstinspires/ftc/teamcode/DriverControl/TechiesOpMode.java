@@ -117,16 +117,17 @@ public abstract class TechiesOpMode extends LinearOpMode {
             } else {
                 robotCore.arm.setPower(0);
             }*/
-           if (gamepad1.right_bumper){
-               if (robotCore.arm.getTargetPosition() <= 0) {
-                   encoderArm(0.15, 4.65);
-                   robotCore.wrist.setPosition(.1);
-                   sleep(200);
-               } else if (robotCore.arm.getTargetPosition() >0){
-                   encoderArm(0.25, -4.65);
+           if (gamepad1.right_bumper) {
+               if (robotCore.arm.getTargetPosition() >=0) {
+                   encoderArm(0.8, -20);//-4.65
                    robotCore.wrist.setPosition(0.1);
                    sleep(200);
-           }}
+               } else if (robotCore.arm.getTargetPosition() < 0) {
+                   encoderArm(0.6, 20);//4.65
+                   robotCore.wrist.setPosition(.1);
+                   sleep(200);
+               }
+           }
 
             if (gamepad1.y) {
                 if (robotCore.wrist.getPosition() > 0.6) {
@@ -140,33 +141,32 @@ public abstract class TechiesOpMode extends LinearOpMode {
                     sleep(200);
                 }
             }
+
             if (gamepad1.x) {
                 robotCore.wrist.setPosition(0.1);
-                encoderArm(0.15, -3.3);
-
+                if (robotCore.arm.getTargetPosition() >=0) {
+                    encoderArm(0.8, -16);//-4.65
+                    sleep(200);
+                } else  {
+                    encoderArm(0.7, 16);//4.65
+                    sleep(200);
+                }
             }
             if (gamepad1.right_trigger>0 &&gamepad1.left_trigger>0){
                 robotCore.droneLauncher.setPosition(.05);
 
             }
-            if (gamepad1.dpad_up){
-                robotCore.arm.setPower(-.5);
-
-
-            }else {
-                robotCore.arm.setPower(0);
-
+            if (gamepad1.dpad_up) {
+                encoderArm(0.8, -2);
             }
-            if (gamepad1.dpad_down){
-                robotCore.arm.setPower(.5);
-
-
-            }else {
-                robotCore.arm.setPower(0);
-
+            if (gamepad1.dpad_down) {
+                encoderArm(0.7, 2);
             }
 
-                double turn = getTurn();
+
+
+
+            double turn = getTurn();
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
 

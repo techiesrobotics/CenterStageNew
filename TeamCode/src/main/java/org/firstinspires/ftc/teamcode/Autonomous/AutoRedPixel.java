@@ -49,40 +49,17 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class AutoRedPixel extends AutoBackdrop {
 
 
-    SampleMecanumDrive odoDriveTrain;
-    TechiesHardwareWithoutDriveTrain robot ;
-    double currentVelocity;
-    double maxVelocity = 0.0;
-    double currentPos;
-    double repetitions = 0;
 
-
-    @Override
-    public void runOpMode() {
-        robot = new TechiesHardwareWithoutDriveTrain(hardwareMap);
-        odoDriveTrain = new SampleMecanumDrive(hardwareMap);
-        // set up camera
-
-
-        // Wait for the game to begin
-
-
-        telemetry.addData(">", "Press Play to start op mode");
-
-        telemetry.update();
-
-
-        waitForStart();
-        telemetry.update();
-        telemetry.addData("do something", "do things");
-
-
-        telemetry.addData("do missions", "finish mission");
-        telemetry.update();
+    public double adjustTurn(double angle) {
+        return -angle;
+    }
+    public double adjustTrajectorydistance(double distance) {
+        return -distance;
+    }
+    public int adjustZone(int zone) {
+        return 4-zone;
     }
 
 
-
-    ;
-    }
+}
 
