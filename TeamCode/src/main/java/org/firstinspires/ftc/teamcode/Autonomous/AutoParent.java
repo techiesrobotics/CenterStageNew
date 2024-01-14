@@ -118,10 +118,10 @@ public abstract class AutoParent extends LinearOpMode  {
 
     protected void doMissions() {
         goToTapeFromStart(adjustZone(position));
-        dropPixel();
-        goToBackdrop(position);
-        //dropBackdrop(position);
-        //park();
+       dropPixel();
+       goToBackdrop(position);
+        dropBackdrop(position);
+        park();
 
     }
     protected void goToTapeFromStart(int targetZone) {
@@ -171,7 +171,7 @@ public abstract class AutoParent extends LinearOpMode  {
         } else if (targetZone == MIDDLE_POSITION) {
         }
     }
-    protected abstract void park();
+    abstract protected void park();
 
 
 
@@ -207,8 +207,8 @@ public abstract class AutoParent extends LinearOpMode  {
         odoDriveTrain.followTrajectory(linetospline);
     }
     protected void straferight (double inches) {
-        odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
-        odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+       // odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+     //   odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
 
         Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
         odoDriveTrain.setPoseEstimate(startPose);
@@ -218,14 +218,14 @@ public abstract class AutoParent extends LinearOpMode  {
         odoDriveTrain.followTrajectory(straferight);
         Pose2d startPose2 = straferight.end();
         odoDriveTrain.setPoseEstimate(startPose2);
-        odoDriveTrain.rightBack.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
-        odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+       // odoDriveTrain.rightBack.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
+    //    odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.REVERSE); // FORWARD // Set to FORWARD if using AndyMark motors*/
 
     }
     protected void strafeleft (double inches){
-        //odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
-      //  odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
-        //sleep(1000);
+        // odoDriveTrain.rightBack.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+       //  odoDriveTrain.rightDrive.setDirection(DcMotor.Direction.FORWARD); // FORWARD // Set to FORWARD if using AndyMark motors*/
+        // sleep(1000);
         Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
         odoDriveTrain.setPoseEstimate(startPose);
         Trajectory strafeleft = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
