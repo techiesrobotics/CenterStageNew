@@ -53,8 +53,8 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0.8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.8, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -69,10 +69,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftDrive;
-    private DcMotorEx leftBack;
-    public DcMotorEx rightDrive;
-    public DcMotorEx rightBack;
+    private DcMotorEx frontRight;
+    private DcMotorEx backRight;
+    public DcMotorEx backLeft;
+    public DcMotorEx frontLeft;
     private DcMotorEx[] motors;
 
     private IMU imu;
@@ -104,13 +104,13 @@ public class SampleMecanumDrive extends MecanumDrive {
         // might comment this later
 
 
-        leftDrive  = hwMap.get(DcMotorEx.class, "frontleft");
-        rightBack = hwMap.get(DcMotorEx.class, "frontright");
-        leftBack  = hwMap.get(DcMotorEx.class, "backleft");
-         rightDrive   = hwMap.get(DcMotorEx.class, "backright");
+        backRight = hwMap.get(DcMotorEx.class, "backright");
+        frontLeft = hwMap.get(DcMotorEx.class, "frontleft");
+        frontRight = hwMap.get(DcMotorEx.class, "frontright");
+        backLeft = hwMap.get(DcMotorEx.class, "backleft");
 
 
-        motors = new DcMotorEx[]{leftDrive, leftBack, rightDrive, rightBack};
+        motors = new DcMotorEx[]{frontRight, backRight, backLeft, frontLeft};
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -129,10 +129,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.FORWARD);//FORWARD./
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);//FORWARD./
 
 // different than last year
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
@@ -293,10 +293,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftDrive.setPower(v);
-        leftBack.setPower(v1);
-        rightDrive.setPower(v2);
-        rightBack.setPower(v3);
+        frontRight.setPower(v);
+        backRight.setPower(v1);
+        backLeft.setPower(v2);
+        frontLeft.setPower(v3);
     }
 
     @Override

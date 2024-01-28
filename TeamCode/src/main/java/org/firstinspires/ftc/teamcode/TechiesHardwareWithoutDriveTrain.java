@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -80,7 +81,7 @@ public class TechiesHardwareWithoutDriveTrain
         rightsensorRange = hwMap.get(DistanceSensor.class, "rightDistance");
 
         claw = hwMap.get(Servo.class, "claw");
-        claw.setPosition(0);
+        claw.setPosition(.1);
 
         droneLauncher = hwMap.get(Servo.class, "dronelauncher");
         droneLauncher.setPosition(.7);
@@ -91,6 +92,7 @@ public class TechiesHardwareWithoutDriveTrain
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
        // arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setDirection(DcMotor.Direction.FORWARD);
         arm.setTargetPosition(0);
         arm.setPower(0);
 

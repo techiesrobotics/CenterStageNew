@@ -96,7 +96,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
             if (gamepad1.a) {
                 if (robotCore.claw.getPosition() > 0.5) {
                     telemetry.addData("claw position", "1");
-                    robotCore.claw.setPosition(0);
+                    robotCore.claw.setPosition(0.1);
                     telemetry.addData("claw position changed to 0", "0");
 
                     telemetry.update();
@@ -104,7 +104,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 }
                 else if (robotCore.claw.getPosition() <= 0.5) {
                     telemetry.addData("claw position", "0");
-                    robotCore.claw.setPosition(0.9);
+                    robotCore.claw.setPosition(.82);
                     telemetry.addData("claw position changed to 1", "1");
                     telemetry.update();
                     sleep(200);
@@ -118,37 +118,37 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 robotCore.arm.setPower(0);
             }*/
            if (gamepad1.right_bumper) {
-               if (robotCore.arm.getTargetPosition() >=0) {
-                   encoderArm(0.8, -20);//-4.65
+               if (robotCore.arm.getTargetPosition() >=-1) {
+                   encoderArm(0.25, -2.7);//-4.65
                    robotCore.wrist.setPosition(0.1);
                    sleep(200);
-               } else if (robotCore.arm.getTargetPosition() < 0) {
-                   encoderArm(0.6, 20);//4.65
+               } else if (robotCore.arm.getTargetPosition() < -1) {
+                   encoderArm(0.2, 2.55);//4.65
                    robotCore.wrist.setPosition(.1);
                    sleep(200);
                }
            }
 
             if (gamepad1.y) {
-                if (robotCore.wrist.getPosition() > 0.6) {
+                if (robotCore.wrist.getPosition() > 0.3
+                ) {
                    // encoderDrive(0.35, .4);
                     robotCore.wrist.setPosition(0.1);
                     sleep(200);
                 }
-                else if (robotCore.wrist.getPosition() <= 0.6) {
+                else if (robotCore.wrist.getPosition() <= 0.3) {
                     //encoderDrive(0.35, -.35);
-                    robotCore.wrist.setPosition(1);
+                    robotCore.wrist.setPosition(.57);
                     sleep(200);
                 }
             }
 
             if (gamepad1.x) {
                 robotCore.wrist.setPosition(0.1);
-                if (robotCore.arm.getTargetPosition() >=0) {
-                    encoderArm(0.8, -16);//-4.65
-                    sleep(200);
+                if (robotCore.arm.getTargetPosition() >=-2) {
+
                 } else  {
-                    encoderArm(0.7, 16);//4.65
+                    encoderArm(0.8, 16);//4.65
                     sleep(200);
                 }
             }
@@ -157,10 +157,10 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             }
             if (gamepad1.dpad_up) {
-                encoderArm(0.8, -2);
+                encoderArm(0.4, -.25);
             }
             if (gamepad1.dpad_down) {
-                encoderArm(0.7, 2);
+                encoderArm(0.35, .25);
             }
 
 
@@ -170,10 +170,10 @@ public abstract class TechiesOpMode extends LinearOpMode {
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
 
-            leftPower    = Range.clip(drivefb + turn + drivelr, -.55, .55) ;
-            rightPower   = Range.clip(drivefb - turn - drivelr, -.55, .55) ;
-            backleftPower   = Range.clip(drivefb + turn - drivelr, -.55, .55) ;
-            backrightPower   = Range.clip(drivefb - turn + drivelr, -.55, .55) ;
+            leftPower    = Range.clip(-drivefb + turn + drivelr, -1, 1) ;
+            rightPower   = Range.clip(-drivefb - turn - drivelr, -1, 1) ;
+            backleftPower   = Range.clip(-drivefb + turn - drivelr, -1, 1) ;
+            backrightPower   = Range.clip(-drivefb - turn + drivelr, -1, 1) ;
 
 
             // Send calculated power to wheels
