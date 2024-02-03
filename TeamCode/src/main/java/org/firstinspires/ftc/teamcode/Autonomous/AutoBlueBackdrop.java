@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -52,7 +54,7 @@ public class AutoBlueBackdrop extends AutoBackdrop {
     public double adjustTurn(double angle) {
         return angle;
     }
-    public double adjustTrajectorydistance(double distance) {
+    public int adjustTrajectorydistance(int distance) {
         return distance;
     }
     public int adjustZone(int zone) {
@@ -60,6 +62,25 @@ public class AutoBlueBackdrop extends AutoBackdrop {
     }
 
 
+    /* protected int determineTargetZone(Telemetry telemetry) {
+        {
+            if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 10 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 28){
+                position = LEFT_POSITION;
+            } else if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 12 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 28) {
+                position = RIGHT_POSITION;
+            }else {
+                position = MIDDLE_POSITION;
+            }
+            telemetry.addData("position", position);
+            telemetry.addData("deviceName", robotCore.leftsensorRange.getDeviceName() );
+            telemetry.addData("range", String.format("%.01f in", robotCore.leftsensorRange.getDistance(DistanceUnit.INCH)));
+            telemetry.addData("deviceName", robotCore.rightsensorRange.getDeviceName() );
+            telemetry.addData("range", String.format("%.01f in", robotCore.rightsensorRange.getDistance(DistanceUnit.INCH)));
+            telemetry.update();
+            return position;
+        }
+    }
+     */
 
 
 }

@@ -1,82 +1,66 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 package org.firstinspires.ftc.teamcode.DriverControl;
 
-
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.DriverControl.TechiesOpMode;
 import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
 import org.firstinspires.ftc.teamcode.util.Gyro;
 
+@TeleOp(name = "Rikhil's 1 Player: DriverControlOpMode", group = "Linear Opmode")
+public class RikhilPIDDrive extends LinearOpMode {
 
-@TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
-//@Disabled
-public abstract class TechiesOpMode extends LinearOpMode {
+    enum PID {
+        P, D, I
+    }
 
-    private static final PIDFController pidController = new PIDFController(new PIDCoefficients(0, 0, 0));
+    ;
+
+    private static PIDCoefficients coefs = new PIDCoefficients(0, 0, 0);
+    private static PIDFController pidController = new PIDFController(coefs);
     private double refAngle = 0;
-    // Declare OpMode members.
+    private PID pidVar = PID.P;
+    boolean isUp;
+    int startingPosition;
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+
     TechiesRobotHardware robot = new TechiesRobotHardware();
     TechiesHardwareWithoutDriveTrain robotCore;
-
-
     private Gyro gyro;
-    private ElapsedTime runtime = new ElapsedTime();
     public static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     public static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
     public static final double WHEEL_DIAMETER_INCHES = 2.0;     // For figuring circumference
     public static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    abstract public double getTurn();
+    public double getTurn() {
+        double turn = gamepad1.right_stick_x;
+        return turn;
+    }
 
-    abstract public double getDrivefb();
+    public double getDrivefb() {
+        double drivefb = -gamepad1.left_stick_y;
+        return drivefb;
+    }
 
-    abstract public double getDrivelr();
-    public final double ClosedClaw=.1;
-    public final double OpenClaw=.76;
 
+    public double getDrivelr() {
+        double drivelr = gamepad1.left_stick_x;
+        return drivelr;
+    }
 
-    boolean isUp;
-    int startingPosition;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         isUp = false;
         robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
         telemetry.addData("Status", "Initialized");
@@ -108,100 +92,51 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             //moved on top
             //This code below has been disabled for the autonomous since the claw is bugging out
-            //arm and wrist needs tp be ,pved
+            //arm and wrist needs tp be
+
             if (gamepad1.a) {
-                if (robotCore.claw.getPosition() > 0.5) {
-                    telemetry.addData("claw position", "1");
-                    robotCore.claw.setPosition(ClosedClaw);
-                    telemetry.addData("claw position changed to 0", "0");
-
-                    telemetry.update();
-                    sleep(200);
-                } else if (robotCore.claw.getPosition() <= 0.5) {
-                    telemetry.addData("claw position", "0");
-                    robotCore.claw.setPosition(OpenClaw);
-                    telemetry.addData("claw position changed to 1", "1");
-                    telemetry.update();
-                    sleep(200);
-                }
-            }
-            if (gamepad1.b) {
-                robotCore.claw.setPosition(0.3);
-            }
-         /*   if (gamepad1.right_bumper){
-                robotCore.arm.setPower(0.2);
-            } else if (gamepad1.left_bumper){
-                robotCore.arm.setPower(-0.2);
-            } else {
-                robotCore.arm.setPower(0);
-            }*/
-            if (gamepad1.right_bumper) {
-                if (robotCore.arm.getTargetPosition() < -5) {
-                    encoderArm(0.3, 4.55);//4.65
-                    robotCore.wrist.setPosition(.1);
-                    sleep(200);
-                    robotCore.arm.setPower(0);
-
-                }else {//(robotCore.arm.getCurrentPosition() >= -5) {
-                    encoderArm(0.35, -5);//-4.65
-                    robotCore.wrist.setPosition(0.1);
-                    sleep(200);
-                }
-
-            }
-
-            if (gamepad1.dpad_right) {
-                encoderArm(1, 500);//-4.65
-                sleep(40000);
-            }
-
-            if (gamepad1.y) {
-                if (robotCore.wrist.getPosition() > 0.3
-                ) {
-                    // encoderDrive(0.35, .4);
-                    robotCore.wrist.setPosition(0.1);
-                    sleep(200);
-                } else if (robotCore.wrist.getPosition() <= 0.3) {
-                    //encoderDrive(0.35, -.35);
-                    robotCore.wrist.setPosition(.57);
-                    sleep(200);
-                }
-            }
-
-            if (gamepad1.x) {
-                robotCore.wrist.setPosition(0.1);
-                if (robotCore.arm.getTargetPosition() >= -2) {
-
+                if (pidVar == PID.P) {
+                    pidVar = PID.D;
+                } else if (pidVar == PID.D) {
+                    pidVar = PID.I;
                 } else {
-                    encoderArm(0.8, 16);//4.65
-                    sleep(200);
+                    pidVar = PID.P;
                 }
-            }
-            if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
-                robotCore.droneLauncher.setPosition(.05);
+            } else if (gamepad1.dpad_up || gamepad1.dpad_down) {
+                int factor = gamepad1.dpad_up ? 1 : -1;
 
+                if (pidVar == PID.P) {
+                    coefs.kP += 0.01 * factor;
+                } else if (pidVar == PID.D) {
+                    coefs.kD += 0.01 * factor;
+                } else if (pidVar == PID.I) {
+                    coefs.kI += 0.01 * factor;
+                }
+
+                pidController = new PIDFController(coefs);
+                sleep(500);
             }
-            if (gamepad1.dpad_up) {
-                encoderArm(0.55, -.25);
-            }
-            if (gamepad1.dpad_down) {
-                encoderArm(0.45, .25);
-            }
+
 
 
             double turn = getTurn();
             double drivefb = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
-            final double pidValue = 0;
+            double pidValue = 0.0;
 
 
             if (turn != 0) {
                 refAngle = gyro.getAngle();
+                pidValue = 0.0;
             } else {
-                //  pidValue = pidController.update(gyro.getAngle() - refAngle);
+                pidValue = pidController.update(gyro.getAngle() - refAngle);
             }
 
-            telemetry.addData("PIDVALUE", pidValue);
+            telemetry.addData("Turning? ", String.valueOf(turn));
+            telemetry.addData("Ref angle", String.valueOf(refAngle));
+            telemetry.addData("PIDVALUE", String.valueOf(pidValue));
+            telemetry.addData("TUNING VAR", String.valueOf(pidVar));
+            telemetry.addData("P-I-D values", coefs.kP + " " + coefs.kI + " " + coefs.kD);
 
             leftPower = Range.clip(-drivefb + turn + drivelr + pidValue, -1, 1);
             rightPower = Range.clip(-drivefb - turn - drivelr - pidValue, -1, 1);
@@ -230,7 +165,6 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
         }
     }
-
 
     public void encoderArm(double speed,
                            double armInches) {
