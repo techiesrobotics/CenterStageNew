@@ -98,7 +98,7 @@ public abstract class AutoParent extends LinearOpMode  {
         if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 1 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 15) {
 
             position = MIDDLE_POSITION;
-        }else if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 1 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 5){
+        }else if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 1 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 6){
             position = LEFT_POSITION;
         } else {
             position = RIGHT_POSITION;
@@ -120,13 +120,11 @@ public abstract class AutoParent extends LinearOpMode  {
        goToTapeFromStart(adjustZone(position));
         dropPixel();
         goToBackdrop(adjustZone(position));
-        dropBackdrop();
+       dropBackdrop();
         park();
 
     }
     abstract protected void goToTapeFromStart(int targetZone);
-
-
 
     protected void dropPixel(){
 

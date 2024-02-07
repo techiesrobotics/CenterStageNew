@@ -16,11 +16,12 @@ abstract public class AutoBackdrop extends AutoParent{
             odoDriveTrain.turn(adjustTurn(Math.toRadians(-94)));
             sleep(800);
             strafeleft(2);
-            back(24);
+            back(22);
         } else if (targetZone == RIGHT_POSITION) {
-            odoDriveTrain.turn(adjustTurn(Math.toRadians(-98)));
+            odoDriveTrain.turn(adjustTurn(Math.toRadians(-96)));
         } else if (targetZone == MIDDLE_POSITION) {
             strafeleft(adjustTurn(4));
+            back(1);
 
         }
     }
@@ -28,16 +29,17 @@ abstract public class AutoBackdrop extends AutoParent{
         if (targetZone == LEFT_POSITION) {
             lineToSpline(-15,adjustTrajectorydistance(-12),0);
         } else if (targetZone == RIGHT_POSITION) {
-            lineToSpline(-36, adjustTrajectorydistance(9), 0);
+            lineToSpline(-36, adjustTrajectorydistance(8), 0);
         } else if (targetZone == MIDDLE_POSITION) {
             back(2);
-            odoDriveTrain.turn(adjustTurn(Math.toRadians(-102)));
-            lineToSpline(-31, adjustTrajectorydistance(1), 0);
+            odoDriveTrain.turn(adjustTurn(Math.toRadians(-96)));
+            lineToSpline(-31, adjustTrajectorydistance(-2), 0);
         }
 
     }
 
     protected void park() {
+        odoDriveTrain.turn(adjustTurn(Math.toRadians(7)));
         straferight(adjustTrajectorydistance(40));
         back(15);
 

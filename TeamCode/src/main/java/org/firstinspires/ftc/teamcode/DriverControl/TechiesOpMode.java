@@ -43,7 +43,6 @@ import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
 import org.firstinspires.ftc.teamcode.util.Gyro;
 
-
 @TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
 //@Disabled
 public abstract class TechiesOpMode extends LinearOpMode {
@@ -137,13 +136,12 @@ public abstract class TechiesOpMode extends LinearOpMode {
             }*/
             if (gamepad1.right_bumper) {
                 if (robotCore.arm.getTargetPosition() < -5) {
-                    encoderArm(0.3, 4.55);//4.65
+                    encoderArm(0.4, 7);//4.65
                     robotCore.wrist.setPosition(.1);
                     sleep(200);
-                    robotCore.arm.setPower(0);
 
                 }else {//(robotCore.arm.getCurrentPosition() >= -5) {
-                    encoderArm(0.35, -5);//-4.65
+                    encoderArm(0.45, -7);//-4.65
                     robotCore.wrist.setPosition(0.1);
                     sleep(200);
                 }
@@ -170,22 +168,21 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             if (gamepad1.x) {
                 robotCore.wrist.setPosition(0.1);
-                if (robotCore.arm.getTargetPosition() >= -2) {
 
-                } else {
-                    encoderArm(0.8, 16);//4.65
-                    sleep(200);
-                }
+
+                encoderArm(1, 100);//4.65
+                sleep(5000);
+
             }
             if (gamepad1.right_trigger > 0 && gamepad1.left_trigger > 0) {
                 robotCore.droneLauncher.setPosition(.05);
 
             }
             if (gamepad1.dpad_up) {
-                encoderArm(0.55, -.25);
+                encoderArm(0.8, -.5);
             }
             if (gamepad1.dpad_down) {
-                encoderArm(0.45, .25);
+                encoderArm(0.8, .5);
             }
 
 
@@ -203,18 +200,18 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             telemetry.addData("PIDVALUE", pidValue);
 
-            leftPower = Range.clip(-drivefb + turn + drivelr + pidValue, -1, 1);
-            rightPower = Range.clip(-drivefb - turn - drivelr - pidValue, -1, 1);
-            backleftPower = Range.clip(-drivefb + turn - drivelr + pidValue, -1, 1);
-            backrightPower = Range.clip(-drivefb - turn + drivelr - pidValue, -1, 1);
+            leftPower = Range.clip(-drivefb + turn + drivelr + pidValue, -0.9, 0.9);
+            rightPower = Range.clip(-drivefb - turn - drivelr - pidValue, -0.9, 0.9);
+            backleftPower = Range.clip(-drivefb + turn - drivelr + pidValue, -0.9, 0.9);
+            backrightPower = Range.clip(-drivefb - turn + drivelr - pidValue, -0.9, 0.9);
 
 
             // Send calculated power to wheels
             //  Multiplier = driveSpeed();
-            robot.leftDrive.setPower(leftPower * Multiplier);
-            robot.rightDrive.setPower(rightPower * Multiplier);
-            robot.leftBack.setPower(backleftPower * Multiplier);
-            robot.rightBack.setPower(backrightPower * Multiplier);
+            robot.leftDrive.setPower(leftPower);
+            robot.rightDrive.setPower(rightPower );
+            robot.leftBack.setPower(backleftPower);
+            robot.rightBack.setPower(backrightPower);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
