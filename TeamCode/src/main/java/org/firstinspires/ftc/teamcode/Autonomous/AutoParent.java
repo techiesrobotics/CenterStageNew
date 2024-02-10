@@ -61,6 +61,8 @@ public abstract class AutoParent extends LinearOpMode  {
     public static final int LEFT_POSITION = 1;
     public static final int MIDDLE_POSITION = 2;
     public static final int RIGHT_POSITION = 3;
+    static final double ARM_UP = -7.3;
+    static final double ARM_DOWN = -0.35;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -95,13 +97,13 @@ public abstract class AutoParent extends LinearOpMode  {
 
     protected int determineTargetZone(Telemetry telemetry) {
 
-        if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 1 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 15) {
+        if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 0.6 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 7.2) {
 
-            position = MIDDLE_POSITION;
-        }else if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 1 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 6){
+            position = RIGHT_POSITION;
+        }else if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 2 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 7.2){
             position = LEFT_POSITION;
         } else {
-            position = RIGHT_POSITION;
+            position = MIDDLE_POSITION;
 
         }
         telemetry.addData("position", position);
@@ -114,9 +116,9 @@ public abstract class AutoParent extends LinearOpMode  {
     }
 
     protected void doMissions() {
-        forward(25);
-        position = determineTargetZone(telemetry);
-        sleep(2000);
+        lineToSpline(29,2,5);
+            position = determineTargetZone(telemetry);
+      sleep(2000);
        goToTapeFromStart(adjustZone(position));
         dropPixel();
         goToBackdrop(adjustZone(position));
@@ -141,12 +143,12 @@ public abstract class AutoParent extends LinearOpMode  {
     }
     abstract protected void goToBackdrop(int targetZone);
     protected void dropBackdrop(){
-        encoderArm(0.5, -5.5);
+        encoderArm(0.5, ARM_UP, false);
         robotCore.wrist.setPosition(0.19);
         sleep(2000);
         robotCore.claw.setPosition(.82);
         sleep(1500);
-        encoderArm(0.3, 5.5);//18
+        encoderArm(0.3, ARM_DOWN, false);//18
         sleep(1500);
     }
     abstract protected void park();
@@ -219,7 +221,7 @@ public abstract class AutoParent extends LinearOpMode  {
     }
 
     public void encoderArm(double speed,
-                           double armInches) {
+                           double armInches, boolean increment) {
         int newArmTarget;
 
 
@@ -227,8 +229,10 @@ public abstract class AutoParent extends LinearOpMode  {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newArmTarget = robotCore.arm.getCurrentPosition() + (int)(armInches * COUNTS_PER_INCH);
-
+            newArmTarget = robotCore.arm.getCurrentPosition() + (int) (armInches * COUNTS_PER_INCH);
+            if (increment==false){
+                newArmTarget = (int) (armInches * COUNTS_PER_INCH);
+            }
             robotCore.arm.setTargetPosition(newArmTarget);
 
 
@@ -245,8 +249,6 @@ public abstract class AutoParent extends LinearOpMode  {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-
-
 
 
             sleep(250);   // optional pause after each move.

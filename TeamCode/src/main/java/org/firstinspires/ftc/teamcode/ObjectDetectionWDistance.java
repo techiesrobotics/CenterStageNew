@@ -56,16 +56,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 //@Disabled
 public class ObjectDetectionWDistance extends LinearOpMode {
 
-    private DistanceSensor leftsensorRange;
-    private DistanceSensor rightsensorRange;
+    private Rev2mDistanceSensor leftsensorRange;
+    private Rev2mDistanceSensor rightsensorRange;
     private byte position = 2;
 
     @Override
     public void runOpMode() {
         // you can use this as a regular DistanceSensor.
-        leftsensorRange = hardwareMap.get(DistanceSensor.class, "leftDistance");
-        rightsensorRange = hardwareMap.get(DistanceSensor.class, "rightDistance");
+        leftsensorRange = hardwareMap.get(Rev2mDistanceSensor.class, "leftDistance");
+        rightsensorRange = hardwareMap.get(Rev2mDistanceSensor.class, "rightDistance");
 
+        leftsensorRange.initialize();
+        rightsensorRange.initialize();
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
         // methods associated with the Rev2mDistanceSensor class.
 
@@ -88,7 +90,12 @@ public class ObjectDetectionWDistance extends LinearOpMode {
             telemetry.addData("range", String.format("%.01f cm", leftsensorRange.getDistance(DistanceUnit.CM)));
             telemetry.addData("range", String.format("%.01f m", leftsensorRange.getDistance(DistanceUnit.METER)));
             telemetry.addData("range", String.format("%.01f in", leftsensorRange.getDistance(DistanceUnit.INCH)));
+            telemetry.addData("deviceName", rightsensorRange.getDeviceName() );
 
+            telemetry.addData("range", String.format("%.01f mm", rightsensorRange.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range", String.format("%.01f cm", rightsensorRange.getDistance(DistanceUnit.CM)));
+            telemetry.addData("range", String.format("%.01f m", rightsensorRange.getDistance(DistanceUnit.METER)));
+            telemetry.addData("range", String.format("%.01f in", rightsensorRange.getDistance(DistanceUnit.INCH)));
             // Rev2mDistanceSensor specific methods.
 
             telemetry.update();

@@ -43,6 +43,10 @@ import org.firstinspires.ftc.teamcode.TechiesHardwareWithoutDriveTrain;
 import org.firstinspires.ftc.teamcode.TechiesRobotHardware;
 import org.firstinspires.ftc.teamcode.util.Gyro;
 
+import java.sql.Date;
+import java.sql.Time;
+import java.time.Instant;
+
 @TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
 //@Disabled
 public abstract class TechiesOpMode extends LinearOpMode {
@@ -79,6 +83,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
         isUp = false;
         robotCore = new TechiesHardwareWithoutDriveTrain(hardwareMap);
         telemetry.addData("Status", "Initialized");
+
         telemetry.update();
         robot.init(hardwareMap);
         gyro = new Gyro(hardwareMap);
@@ -135,13 +140,13 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 robotCore.arm.setPower(0);
             }*/
             if (gamepad1.right_bumper) {
-                if (robotCore.arm.getTargetPosition() < -5) {
-                    encoderArm(0.4, 7);//4.65
+                if (robotCore.arm.getTargetPosition() / COUNTS_PER_INCH > -3.5) {
+                    encoderArm(0.4, -7.3, false);//4.65
                     robotCore.wrist.setPosition(.1);
                     sleep(200);
 
                 }else {//(robotCore.arm.getCurrentPosition() >= -5) {
-                    encoderArm(0.45, -7);//-4.65
+                    encoderArm(0.45, -0.35, false);//-4.65
                     robotCore.wrist.setPosition(0.1);
                     sleep(200);
                 }
@@ -149,7 +154,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
             }
 
             if (gamepad1.dpad_right) {
-                encoderArm(1, 500);//-4.65
+                encoderArm(1, 500, true);//-4.65
                 sleep(40000);
             }
 
@@ -170,7 +175,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
                 robotCore.wrist.setPosition(0.1);
 
 
-                encoderArm(1, 100);//4.65
+                encoderArm(1, -0.3, false);//4.65
                 sleep(5000);
 
             }
@@ -179,10 +184,10 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             }
             if (gamepad1.dpad_up) {
-                encoderArm(0.8, -.5);
+                encoderArm(0.8, -.5, true);
             }
             if (gamepad1.dpad_down) {
-                encoderArm(0.8, .5);
+                encoderArm(0.8, .5, true);
             }
 
 
@@ -213,12 +218,14 @@ public abstract class TechiesOpMode extends LinearOpMode {
             robot.leftBack.setPower(backleftPower);
             robot.rightBack.setPower(backrightPower);
             // Show the elapsed game time and wheel power.
+            telemetry.addData("Arm position",  robotCore.arm.getCurrentPosition() / COUNTS_PER_INCH);
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.addData("stickX", drivefb + turn + drivelr);
             telemetry.addData("Motor pos: ", robotCore.claw.getPosition());
             telemetry.addData("Position of wrist servo: ", robotCore.wrist.getPosition());
             telemetry.addData("Position of claw servo: ", robotCore.claw.getPosition());
+            telemetry.addData("Date", Instant.now().toString());
             telemetry.update();
             // if (gamepad1.y) {
             // robotCore.droneLauncher.setPosition(0);
@@ -230,7 +237,7 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
 
     public void encoderArm(double speed,
-                           double armInches) {
+                           double armInches, boolean increment) {
         int newArmTarget;
 
 
@@ -239,7 +246,9 @@ public abstract class TechiesOpMode extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
             newArmTarget = robotCore.arm.getCurrentPosition() + (int) (armInches * COUNTS_PER_INCH);
-
+            if (increment==false){
+                newArmTarget = (int) (armInches * COUNTS_PER_INCH);
+            }
             robotCore.arm.setTargetPosition(newArmTarget);
 
 
